@@ -41,7 +41,7 @@
         //  Configuration
         //****************************
         void initialize(unsigned long microseconds=1000000) __attribute__((always_inline)) {
-	        TCCR1B = _BV(WGM13);        // set mode as phase and frequency correct pwm, stop the timer
+	        stop();        // set mode as phase and frequency correct pwm, stop the timer
 	        TCCR1A = 0;                 // clear control register A 
 	        setPeriod(microseconds);
         }
@@ -71,7 +71,7 @@
 		        pwmPeriod = TIMER1_RESOLUTION - 1;
 	        }
 	        ICR1 = pwmPeriod;
-	        TCCR1B = _BV(WGM13) | clockSelectBits;
+	        resume();
         }
 
         //****************************
@@ -126,7 +126,7 @@
           }
 	        #endif
 	        setPwmDuty(pin, duty);
-	        TCCR1B = _BV(WGM13) | clockSelectBits;
+	        resume();
         }
         void pwm(char pin, unsigned int duty, unsigned long microseconds) __attribute__((always_inline)) {
 	        if (microseconds > 0) 
@@ -168,11 +168,6 @@
         // properties
         static unsigned short pwmPeriod;
         static unsigned char clockSelectBits;
-
-
-
-
-
 
     #elif defined(__arm__) && defined(CORE_TEENSY)
 
