@@ -10,5 +10,6 @@ disablePwm	KEYWORD2
 attachInterrupt	KEYWORD2
 detachInterrupt	KEYWORD2
 setPeriod	KEYWORD2
+setFrequency  KEYWORD2
 setPwmDuty	KEYWORD2
 isrCallback	KEYWORD2

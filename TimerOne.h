@@ -47,32 +47,11 @@
             setPeriod(microseconds);
         }
         void setPeriod(unsigned long microseconds) __attribute__((always_inline)) {
-	        const unsigned long cycles = (F_CPU / 2000000) * microseconds;
-	        if (cycles < TIMER1_RESOLUTION) {
-		        clockSelectBits = _BV(CS10);
-		        pwmPeriod = cycles;
-	        } else
-	        if (cycles < TIMER1_RESOLUTION * 8) {
-		        clockSelectBits = _BV(CS11);
-		        pwmPeriod = cycles / 8;
-	        } else
-	        if (cycles < TIMER1_RESOLUTION * 64) {
-		        clockSelectBits = _BV(CS11) | _BV(CS10);
-		        pwmPeriod = cycles / 64;
-	        } else
-	        if (cycles < TIMER1_RESOLUTION * 256) {
-		        clockSelectBits = _BV(CS12);
-		        pwmPeriod = cycles / 256;
-	        } else
-	        if (cycles < TIMER1_RESOLUTION * 1024) {
-		        clockSelectBits = _BV(CS12) | _BV(CS10);
-		        pwmPeriod = cycles / 1024;
-	        } else {
-		        clockSelectBits = _BV(CS12) | _BV(CS10);
-		        pwmPeriod = TIMER1_RESOLUTION - 1;
-	        }
-	        ICR1 = pwmPeriod;
-	        resume();
+          const unsigned long cycles = (F_CPU / 2000000) * microseconds;
+          setCycles((F_CPU / 2000000) * microseconds);
+        }
+        void setFrequency(unsigned long Hz) __attribute__((always_inline)) {
+          setCycles(F_CPU / Hz /2);
         }
 
         //****************************
@@ -169,6 +148,34 @@
         // properties
         static unsigned short pwmPeriod;
         static unsigned char clockSelectBits;
+        void setCycles(unsigned long cycles) __attribute__((always_inline)) {
+          if (cycles < TIMER1_RESOLUTION) { //PreScaler = 1
+            clockSelectBits = _BV(CS10);
+            pwmPeriod = cycles;
+          }
+          else if (cycles < TIMER1_RESOLUTION * 8) { //PreScaler = 8
+            clockSelectBits = _BV(CS11);
+            pwmPeriod = cycles / 8;
+          }
+          else if (cycles < TIMER1_RESOLUTION * 64) {
+            clockSelectBits = _BV(CS11) | _BV(CS10);
+            pwmPeriod = cycles / 64;
+          }
+          else if (cycles < TIMER1_RESOLUTION * 256) {
+            clockSelectBits = _BV(CS12);
+            pwmPeriod = cycles / 256;
+          }
+          else if (cycles < TIMER1_RESOLUTION * 1024) {
+            clockSelectBits = _BV(CS12) | _BV(CS10);
+            pwmPeriod = cycles / 1024;
+          }
+          else {
+            clockSelectBits = _BV(CS12) | _BV(CS10);
+            pwmPeriod = TIMER1_RESOLUTION - 1;
+          }
+          ICR1 = pwmPeriod;
+          resume();
+        }
 
     #elif defined(__arm__) && defined(CORE_TEENSY)
 
