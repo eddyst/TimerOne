@@ -40,10 +40,11 @@
         //****************************
         //  Configuration
         //****************************
-        void initialize(unsigned long microseconds=1000000) __attribute__((always_inline)) {
+        void initialize(unsigned long microseconds=0) __attribute__((always_inline)) {
 	        stop();        // set mode as phase and frequency correct pwm, stop the timer
 	        TCCR1A = 0;                 // clear control register A 
-	        setPeriod(microseconds);
+          if (microseconds > 0)
+            setPeriod(microseconds);
         }
         void setPeriod(unsigned long microseconds) __attribute__((always_inline)) {
 	        const unsigned long cycles = (F_CPU / 2000000) * microseconds;
