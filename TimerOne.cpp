@@ -6,6 +6,7 @@
  *  Modified Oct 2009 by Dan Clemens to work with timer1 of the ATMega1280 or Arduino Mega
  *  Modified April 2012 by Paul Stoffregen
  *  Modified again, June 2014 by Paul Stoffregen
+ *  Modified November 2016 by Eddy Steier
  *
  *  This is free software. You can redistribute it and/or modify it under
  *  the terms of Creative Commons Attribution 3.0 United States License. 
